@@ -99,7 +99,12 @@ class snake(object):
                 else: c.move(c.dircx, c.dircy)
 
     def reset(self, pos):
-        pass
+        self.head = cube(pos)
+        self.body = []
+        self.body.append(self.head)
+        self.turns = {}
+        self.dircx = 0
+        self.dircy = 1
 
     def addTail(self):
         tail = self.body[-1]
@@ -162,6 +167,16 @@ def randSnack(rows, snake):
 #     pygame.draw.rect(surfaceArea, (255, 0, 0), (100, 50, 50, 50))
 #     pygame.display.update()
 
+def show_message(subject, content):
+  root = tk.Tk()
+  root.attributes("-topmost", True)
+  root.withdraw()
+  messagebox.showinfo(subject,content)
+  try:
+    root.destroy()
+  except:
+    pass
+
 def main():
     global width, height, rows, s, snack
     width = 800
@@ -184,6 +199,15 @@ def main():
         if s.body[0].pos == snack.pos:
             s.addTail()
             snack = cube(randSnack(rows, s), color=(255, 0, 255)) ### I AM HERE
+
+        for i in range(len(s.body)):
+          if s.body[i].pos in list(map(lambda z:z.pos, s.body[i+1:])):
+            print('Your max length', len(s.body))
+            show_message('You lose', 'TRY AGAIN!')
+            # if you crash reset
+            s.reset((10, 10))
+            break
+
         redrawWindow(win)
 
         pass
