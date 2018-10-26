@@ -2,6 +2,7 @@ import math, random, pygame, sys
 from pygame.locals import *
 import tkinter as tk
 from tkinter import messagebox
+# class to create, move draw cubes
 
 class cube(object):
     rows = 32
@@ -22,7 +23,7 @@ class cube(object):
         row = self.pos[0]
         col = self.pos[1]
         # make sure we draw inside of white square
-        pygame.draw.rect(surface, self.color, (row * d + 1, col * d + 1, d-2, d-2))
+        pygame.draw.ellipse(surface, self.color, (row * d + 1, col * d + 1, d-2, d-2))
         if eyes:
             centre = d//2
             eyeRad = 2
@@ -36,6 +37,7 @@ class cube(object):
 class snake(object):
     body = []
     turns = {}
+    #like 
     def __init__(self, color, pos):
         self.color = color
         self.head = cube(pos)
@@ -152,12 +154,12 @@ def redrawWindow(surfaceArea):
     pygame.display.update()
 
 def randSnack(rows, snake):
-    positions = snake.body
+    position = snake.body
     while True:
         # this makes sure that the snack doesnt go on the snake
         x = random.randrange(rows)
         y = random.randrange(rows)
-        if len(list(filter(lambda z: z.pos == (x, y), positions))) > 0:
+        if len(list(filter(lambda z: z.pos == (x, y), position))) > 0:
             continue
         else:
             break
@@ -194,12 +196,20 @@ def main():
 
     while flag:
         pygame.time.delay(50)
-        clock.tick(15)
+        clock.tick(10)
         s.move()
+        #when the head overlaps food add tail
         if s.body[0].pos == snack.pos:
             s.addTail()
-            snack = cube(randSnack(rows, s), color=(255, 0, 255)) ### I AM HERE
+            snack = cube(randSnack(rows, s), color=(255, 0, 255))
+      # attempt at making snake die
+        # if s.body[0][0] in [0, height] or s.body[0][1] in [0][width] or s.body[0] in s.body[1:]:
+        #   print('Your max length', len(s.body))
+        #     show_message('You lose', 'TRY AGAIN!')
+        #     # if you crash reset
+        #     s.reset((10, 10))
 
+        # if snake crashes into itself reset
         for i in range(len(s.body)):
           if s.body[i].pos in list(map(lambda z:z.pos, s.body[i+1:])):
             print('Your max length', len(s.body))
